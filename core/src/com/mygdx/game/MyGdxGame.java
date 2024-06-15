@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,16 +12,16 @@ import java.util.Random;
 
 public class MyGdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
-	private Texture waterTexture;
-	private Texture fireTexture;
-	private Texture earthTexture;
 	private BitmapFont font;
-	private GameManager gameManager;
 	private ShapeRenderer shapeRenderer;
+	private GameManager gameManager;
 	private Player player;
 	private Player machine;
-	private static final int CARD_WIDTH = 100;
-	private static final int CARD_HEIGHT = 150;
+	private TextureManager textureManager;
+
+	public static final int CARD_WIDTH = 100;
+	public static final int CARD_HEIGHT = 150;
+
 	private static final int NUM_CARDS_IN_HAND = 3;
 
 	@Override
@@ -30,15 +29,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 
-		waterTexture = new Texture("water.jpg");
-		fireTexture = new Texture("fire.jpg");
-		earthTexture = new Texture("earth.jpg");
-
 		font = new BitmapFont();
 		font.setColor(Color.WHITE);
 
-
 		String[] typeNames = {"Water", "Fire", "Earth"};
+		textureManager = new TextureManager(typeNames);
+
 		gameManager = new GameManager(typeNames, 10);
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
@@ -54,113 +50,74 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render() {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		// Draw player cards using SpriteBatch
 		batch.begin();
-		drawPlayerCards(player, 50, Gdx.graphics.getHeight() - 200);
+		drawPlayerCardsBatch(player, 50, Gdx.graphics.getHeight() - 450);
+		batch.end();
+
+		// Draw scores
+		batch.begin();
 		drawScores();
 		batch.end();
 
+		// Draw player cards using ShapeRenderer
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		drawPlayerCardCircles(player, 50, Gdx.graphics.getHeight() - 200);
+		drawPlayerCardsShape(player, 50, Gdx.graphics.getHeight() - 450);
 		shapeRenderer.end();
 
-		batch.begin();
-		drawPlayerCardNumbers(player, 50, Gdx.graphics.getHeight() - 200);
-		batch.end();
-
-
-
+		// Handle input for playing a round
 		if (Gdx.input.justTouched()) {
 			playRound();
 		}
 	}
 
-	private void drawPlayerCardNumbers(Player player, float startX, float startY) {
+	private void drawPlayerCardsBatch(Player player, float startX, float startY) {
 		float cardSpacing = 20;
-		float currentX = startX;
+		float totalWidth = player.getCardsInHand().size() * (Card.CARD_WIDTH + cardSpacing) - cardSpacing;
+		float currentX = startX + (Gdx.graphics.getWidth() - totalWidth) / 2;
 
 		for (Card card : player.getCardsInHand()) {
-			drawCardNumber(card, currentX, startY);
-			currentX += CARD_WIDTH + cardSpacing;
+			card.setCardPosition(currentX, startY);
+			card.drawCardBatch(batch, font);
+			currentX += Card.CARD_WIDTH + cardSpacing;
 		}
 	}
-
-	private void drawPlayerCardCircles(Player player, float startX, float startY) {
+	private void drawPlayerCardsShape(Player player, float startX, float startY) {
 		float cardSpacing = 20;
-		float currentX = startX;
+		float totalWidth = player.getCardsInHand().size() * (Card.CARD_WIDTH + cardSpacing) - cardSpacing;
+		float currentX = startX + (Gdx.graphics.getWidth() - totalWidth) / 2;
 
 		for (Card card : player.getCardsInHand()) {
-			drawNumberCircle(card, currentX + CARD_WIDTH / 2, startY + CARD_HEIGHT / 2);
-			currentX += CARD_WIDTH + cardSpacing;
+			card.setCardPosition(currentX, startY);
+			//card.drawCardShape(shapeRenderer);
+			currentX += Card.CARD_WIDTH + cardSpacing;
 		}
 	}
-
-	private void drawPlayerCards(Player player, float startX, float startY) {
-		float cardSpacing = 20;
-		float currentX = startX;
-
-		for (Card card : player.getCardsInHand()) {
-			Texture texture = getTextureForCard(card);
-			if (texture != null) {
-				batch.draw(texture, currentX, startY, CARD_WIDTH, CARD_HEIGHT);
-				currentX += CARD_WIDTH + cardSpacing;
-			}
-		}
-	}
-
-	private void drawNumberCircle(Card card, float x, float y) {
-		float circleRadius = 15;
-		float circleX = x + CARD_WIDTH - 70;
-		float circleY = y + CARD_HEIGHT - 100;
-		shapeRenderer.setColor(Color.GRAY);
-		shapeRenderer.circle(circleX, circleY, circleRadius);
-	}
-
-	private void drawCardNumber(Card card, float x, float y) {
-		String numberText = String.valueOf(card.getValue());
-		float numberX = x + CARD_WIDTH - 26;
-		float numberY = y + CARD_HEIGHT - 26 + font.getLineHeight() / 2;
-		font.draw(batch, numberText, numberX, numberY);
-	}
-
-	private Texture getTextureForCard(Card card) {
-		switch (card.getType().getTypeName()) {
-			case "Water":
-				return waterTexture;
-			case "Fire":
-				return fireTexture;
-			case "Earth":
-				return earthTexture;
-			default:
-				return null;
-		}
-	}
-
 	private void playRound() {
-		// Human player (player1) plays a card randomly
 		if (!player.getCardsInHand().isEmpty()) {
 			Random random = new Random();
 			int index = random.nextInt(player.getCardsInHand().size());
-			Card player1Card = player.playCard(index);
+			Card playerCard = player.playCard(index);
 
-			// AI player (player2) plays a card randomly
 			if (!machine.getCardsInHand().isEmpty()) {
 				index = random.nextInt(machine.getCardsInHand().size());
-				Card player2Card = machine.playCard(index);
+				Card machineCard = machine.playCard(index);
 
-				// Determine winner
-				int comparisonResult = CardComparator.compare(player1Card, player2Card);
+				int comparisonResult = CardComparator.compare(playerCard, machineCard);
 				if (comparisonResult > 0) {
 					player.setScore(player.getScore() + 1);
-					System.out.println("Player 1 wins with " + player1Card + " against " + player2Card);
+					System.out.println("Player wins with " + playerCard + " against " + machineCard);
 				} else if (comparisonResult < 0) {
 					machine.setScore(machine.getScore() + 1);
-					System.out.println("Player 2 wins with " + player2Card + " against " + player1Card);
+					System.out.println("Machine wins with " + machineCard + " against " + playerCard);
 				} else {
-					System.out.println("It's a tie with " + player1Card + " and " + player2Card);
+					System.out.println("It's a tie with " + playerCard + " and " + machineCard);
 				}
 			}
 		}
 	}
+
 	private void drawScores() {
 		String playerScoreText = "Player Score: " + player.getScore();
 		String machineScoreText = "Machine Score: " + machine.getScore();
@@ -172,9 +129,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void dispose() {
 		batch.dispose();
 		shapeRenderer.dispose();
-		waterTexture.dispose();
-		fireTexture.dispose();
-		earthTexture.dispose();
 		font.dispose();
 	}
 }

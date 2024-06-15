@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -7,12 +8,15 @@ import java.util.Collections;
 public class Deck
 {
     private ArrayList<Card> deck = new ArrayList<Card>();
+    private TextureManager textureManager;
 
     public Deck(String[] typeNames,int maxNumberOnDeck)
     {
+        this.textureManager = new TextureManager(typeNames);
         for (String typeName : typeNames) {
-            for (int cardNumber = 1; cardNumber <= maxNumberOnDeck; cardNumber++) {
-                deck.add(new Card(typeName, cardNumber));
+            for (int cardNumber = 1; cardNumber <= maxNumberOnDeck; cardNumber++)
+            {
+                deck.add(new Card(typeName, cardNumber,textureManager));
             }
         }
         Shuffle();
@@ -28,5 +32,9 @@ public class Deck
             return deck.remove(0);
         }
         else return null;
+    }
+    private void generateTextureMap()
+    {
+
     }
 }

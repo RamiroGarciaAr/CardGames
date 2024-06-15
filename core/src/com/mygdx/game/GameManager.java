@@ -54,7 +54,6 @@ public class GameManager
             type.addBeats(beatsTypeName);
         }
     }
-
     public void dealInitialCards(Player player,int numCards)
     {
         for(int i=0; i<numCards;i++ )
