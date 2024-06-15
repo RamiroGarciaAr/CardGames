@@ -20,6 +20,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	private GameManager gameManager;
 	private Player player;
 	private Player machine;
+
+	private float mouseX,mouseY;
 	private static final int NUM_CARDS_IN_HAND = 3;
 	Texture backgroundTexture = null;
 
@@ -45,31 +47,29 @@ public class MyGdxGame extends ApplicationAdapter {
 		gameManager.dealInitialCards(player, NUM_CARDS_IN_HAND);
 		gameManager.dealInitialCards(machine, NUM_CARDS_IN_HAND);
 	}
-	private void LoadRandomBackgroundImage()
-	{
+
+	private void LoadRandomBackgroundImage() {
 		FileHandle folder = Gdx.files.internal("assets/Backgrounds/");
-		if (folder.exists() && folder.isDirectory())
-		{
+		if (folder.exists() && folder.isDirectory()) {
 			FileHandle[] backgrounds = folder.list();
 			if (backgrounds.length > 1) {
 				int index = new Random().nextInt(backgrounds.length);
 				backgroundTexture = new Texture(backgrounds[index]);
 			} else backgroundTexture = new Texture(backgrounds[0]);
-		}
-		else {
+		} else {
 			Gdx.app.error("TextureManager", "Backgrounds directory is missing or not found.");
 		}
 
 	}
+
 	@Override
 	public void render() {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		// Draw player cards using SpriteBatch
+		// Draw player cards and Background using SpriteBatch
 		batch.begin();
-		if (backgroundTexture != null)
-		{
-			Sprite backgroundSprite = new Sprite(backgroundTexture,500,500);
+		if (backgroundTexture != null) {
+			Sprite backgroundSprite = new Sprite(backgroundTexture,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 			backgroundSprite.draw(batch);
 		}
 		drawPlayerCardsBatch(player, 50, Gdx.graphics.getHeight() - 450);
@@ -80,16 +80,41 @@ public class MyGdxGame extends ApplicationAdapter {
 		drawScores();
 		batch.end();
 
+		// Resaltar la carta bajo el mouse
+		highlightCardUnderMouse();
+
 		// Draw player cards using ShapeRenderer
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		drawPlayerCardsShape(player, 50, Gdx.graphics.getHeight() - 450);
 		shapeRenderer.end();
-
+		mouseX = Gdx.input.getX();
+		mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 		// Handle input for playing a round
 		if (Gdx.input.justTouched()) {
-			playRound();
+			//playRound();
+			Card selectedCard = getSelectedCard(mouseX,mouseY);
+			if (selectedCard != null) {
+				System.out.println("Pressed " + selectedCard.toString());
+			}
 		}
 	}
+
+	private void highlightCardUnderMouse() {
+		float mouseX = Gdx.input.getX();
+		float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY(); // Invertir el eje Y
+
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.setColor(Color.YELLOW); // Definir el color una vez fuera del bucle
+
+		for (Card card : player.getCardsInHand()) {
+			if (card.isTouched(mouseX, mouseY)) {
+				card.highlightCard(shapeRenderer); // Resaltar la carta sin llamar a begin/end dentro del bucle
+			}
+		}
+
+		shapeRenderer.end();
+	}
+
 
 	private void drawPlayerCardsBatch(Player player, float startX, float startY) {
 		float cardSpacing = 20;
@@ -102,6 +127,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			currentX += Card.CARD_WIDTH + cardSpacing;
 		}
 	}
+
 	private void drawPlayerCardsShape(Player player, float startX, float startY) {
 		float cardSpacing = 20;
 		float totalWidth = player.getCardsInHand().size() * (Card.CARD_WIDTH + cardSpacing) - cardSpacing;
@@ -113,6 +139,14 @@ public class MyGdxGame extends ApplicationAdapter {
 			currentX += Card.CARD_WIDTH + cardSpacing;
 		}
 	}
+
+	private Card getSelectedCard(float mouseX,float mouseY) {
+		for (Card card : player.getCardsInHand()) {
+			if (card.isTouched(mouseX,mouseY)) return card;
+		}
+		return null;
+	}
+
 	private void playRound() {
 		if (!player.getCardsInHand().isEmpty()) {
 			Random random = new Random();

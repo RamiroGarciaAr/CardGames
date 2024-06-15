@@ -86,6 +86,15 @@ public class Card implements Comparable<Card> {
         float numberY = cardPosition.y + cardSize.y - 26 + font.getLineHeight() / 2;
         font.draw(batch, numberText, numberX, numberY);
     }
+    public boolean isTouched(float touchX, float touchY)
+    {
+        return touchX >= cardPosition.x && touchX <= cardPosition.x + cardSize.x
+                && touchY >= cardPosition.y && touchY <= cardPosition.y + cardSize.y;
+    }
+    public void highlightCard(ShapeRenderer shapeRenderer) {
+        shapeRenderer.rect(cardPosition.x, cardPosition.y, cardSize.x, cardSize.y);
+    }
+
 
     @Override
     public int compareTo(Card other) {
