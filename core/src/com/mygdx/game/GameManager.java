@@ -55,6 +55,13 @@ public class GameManager
         }
     }
 
+    public void dealInitialCards(Player player,int numCards)
+    {
+        for(int i=0; i<numCards;i++ )
+        {
+            player.addCardToHand(deck.drawCard());
+        }
+    }
     public Deck getDeck()
     {
         return deck;
