@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 
+import java.io.File;
 import java.util.*;
 
 public class TextureManager {
-    private Map<String, ArrayList<Texture>> textureMap = new HashMap<>();
+    private final Map<String, ArrayList<Texture>> textureMap = new HashMap<>();
 
-    public TextureManager(String[] typeNames) {
+    public TextureManager(String[] typeNames)
+    {
         // Print current working directory
         for (String folderTypeName : typeNames) {
 
@@ -47,6 +49,8 @@ public class TextureManager {
         }
         return null;
     }
+
+
     private void printTextureMap() {
         Gdx.app.log("TextureManager", "Texture Map Contents:");
         for (Map.Entry<String, ArrayList<Texture>> entry : textureMap.entrySet()) {

@@ -2,9 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -17,23 +20,19 @@ public class MyGdxGame extends ApplicationAdapter {
 	private GameManager gameManager;
 	private Player player;
 	private Player machine;
-	private TextureManager textureManager;
-
-	public static final int CARD_WIDTH = 100;
-	public static final int CARD_HEIGHT = 150;
-
 	private static final int NUM_CARDS_IN_HAND = 3;
+	Texture backgroundTexture = null;
+
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-
+		LoadRandomBackgroundImage();
 		font = new BitmapFont();
 		font.setColor(Color.WHITE);
 
 		String[] typeNames = {"Water", "Fire", "Earth"};
-		textureManager = new TextureManager(typeNames);
 
 		gameManager = new GameManager(typeNames, 10);
 		gameManager.addTypeRelation("Water", "Fire");
@@ -46,13 +45,33 @@ public class MyGdxGame extends ApplicationAdapter {
 		gameManager.dealInitialCards(player, NUM_CARDS_IN_HAND);
 		gameManager.dealInitialCards(machine, NUM_CARDS_IN_HAND);
 	}
+	private void LoadRandomBackgroundImage()
+	{
+		FileHandle folder = Gdx.files.internal("assets/Backgrounds/");
+		if (folder.exists() && folder.isDirectory())
+		{
+			FileHandle[] backgrounds = folder.list();
+			if (backgrounds.length > 1) {
+				int index = new Random().nextInt(backgrounds.length);
+				backgroundTexture = new Texture(backgrounds[index]);
+			} else backgroundTexture = new Texture(backgrounds[0]);
+		}
+		else {
+			Gdx.app.error("TextureManager", "Backgrounds directory is missing or not found.");
+		}
 
+	}
 	@Override
 	public void render() {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// Draw player cards using SpriteBatch
 		batch.begin();
+		if (backgroundTexture != null)
+		{
+			Sprite backgroundSprite = new Sprite(backgroundTexture,500,500);
+			backgroundSprite.draw(batch);
+		}
 		drawPlayerCardsBatch(player, 50, Gdx.graphics.getHeight() - 450);
 		batch.end();
 
