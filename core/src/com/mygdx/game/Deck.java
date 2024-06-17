@@ -33,8 +33,4 @@ public class Deck
         }
         else return null;
     }
-    private void generateTextureMap()
-    {
-
-    }
 }

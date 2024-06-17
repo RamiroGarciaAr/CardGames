@@ -2,6 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,15 +21,15 @@ public class MyGdxGame extends ApplicationAdapter {
 	private ShapeRenderer shapeRenderer;
 	private GameManager gameManager;
 	private Player player;
-	private Player machine;
-
+	private AI machine;
 	private float mouseX,mouseY;
+	private Sound placementSound;
+	private Music gameMusic;
 	private static final int NUM_CARDS_IN_HAND = 3;
 	Texture backgroundTexture = null;
-
-
 	@Override
-	public void create() {
+	public void create()
+	{
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		LoadRandomBackgroundImage();
@@ -42,7 +44,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		gameManager.addTypeRelation("Earth", "Water");
 
 		player = new Player(0, NUM_CARDS_IN_HAND);
-		machine = new Player(0, NUM_CARDS_IN_HAND);
+		machine = new AI(0, NUM_CARDS_IN_HAND);
 
 		gameManager.dealInitialCards(player, NUM_CARDS_IN_HAND);
 		gameManager.dealInitialCards(machine, NUM_CARDS_IN_HAND);
@@ -58,6 +60,15 @@ public class MyGdxGame extends ApplicationAdapter {
 			} else backgroundTexture = new Texture(backgrounds[0]);
 		} else {
 			Gdx.app.error("TextureManager", "Backgrounds directory is missing or not found.");
+		}
+
+	}
+	private void LoadSounds()
+	{
+		FileHandle folder = Gdx.files.internal("assets/Sounds/");
+		if (folder.exists() && folder.isDirectory())
+		{
+			placementSound = 
 		}
 
 	}
@@ -91,12 +102,26 @@ public class MyGdxGame extends ApplicationAdapter {
 		mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 		// Handle input for playing a round
 		if (Gdx.input.justTouched()) {
-			//playRound();
+
 			Card selectedCard = getSelectedCard(mouseX,mouseY);
 			if (selectedCard != null) {
 				System.out.println("Pressed " + selectedCard.toString());
+				gameManager.playRound(selectedCard,player,machine);
+				if (winGameCondition(player))
+				{
+					System.out.println("PLAYER WON");
+				}
+				else if (winGameCondition(machine))
+				{
+					System.out.println("MACHINE WON");
+				}
 			}
 		}
+	}
+	//Esto puede ser un metodo abstracto que se crea en al GM
+	private boolean winGameCondition(Player player)
+	{
+		return player.getScore() == 2;
 	}
 
 	private void highlightCardUnderMouse() {
@@ -147,29 +172,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		return null;
 	}
 
-	private void playRound() {
-		if (!player.getCardsInHand().isEmpty()) {
-			Random random = new Random();
-			int index = random.nextInt(player.getCardsInHand().size());
-			Card playerCard = player.playCard(index);
-
-			if (!machine.getCardsInHand().isEmpty()) {
-				index = random.nextInt(machine.getCardsInHand().size());
-				Card machineCard = machine.playCard(index);
-
-				int comparisonResult = CardComparator.compare(playerCard, machineCard);
-				if (comparisonResult > 0) {
-					player.setScore(player.getScore() + 1);
-					System.out.println("Player wins with " + playerCard + " against " + machineCard);
-				} else if (comparisonResult < 0) {
-					machine.setScore(machine.getScore() + 1);
-					System.out.println("Machine wins with " + machineCard + " against " + playerCard);
-				} else {
-					System.out.println("It's a tie with " + playerCard + " and " + machineCard);
-				}
-			}
-		}
-	}
 
 	private void drawScores() {
 		String playerScoreText = "Player Score: " + player.getScore();
@@ -193,7 +195,7 @@ class CardComparator {
 		} else if (o2.getType().canBeat(o1.getType())) {
 			return -1;
 		} else {
-			return Integer.compare(o1.getValue(), o2.getValue());
+			return o1.compareTo(o2);
 		}
 	}
 }
