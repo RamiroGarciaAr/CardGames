@@ -44,6 +44,7 @@ public class MusicPlayer {
             currentSongIndex = 0; // Repetir la lista de reproducción
         }
         Music nextSong = playlist.get(currentSongIndex);
+        nextSong.setVolume(0.1f);
         nextSong.play();
     }
 
