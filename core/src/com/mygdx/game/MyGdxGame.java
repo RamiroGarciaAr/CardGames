@@ -29,6 +29,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	private boolean mouseOverHighlightedCard = false;
 	Texture backgroundTexture = null;
 
+	private boolean gameEnded = false;
+	private boolean playerWon;
+
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
@@ -80,7 +83,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render() {
+	public void render()
+	{
+		if (gameEnded) {
+			new EndScreen(playerWon).render(Gdx.graphics.getDeltaTime());
+			return;
+		}
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// Draw player cards and Background using SpriteBatch
@@ -115,9 +123,11 @@ public class MyGdxGame extends ApplicationAdapter {
 				placementSound.play(0.5f);
 				gameManager.playRound(selectedCard,player,machine);
 				if (winGameCondition(player)) {
-					System.out.println("PLAYER WON");
+					gameEnded = true;
+					playerWon = true;
 				} else if (winGameCondition(machine)) {
-					System.out.println("MACHINE WON");
+					playerWon = false;
+					gameEnded = true;
 				}
 			}
 		}

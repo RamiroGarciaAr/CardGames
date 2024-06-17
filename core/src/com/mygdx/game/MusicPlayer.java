@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MusicPlayer {
@@ -25,6 +26,7 @@ public class MusicPlayer {
 
     public void play() {
         if (!playlist.isEmpty()) {
+            Collections.shuffle(playlist);
             Music currentSong = playlist.get(currentSongIndex);
             currentSong.setVolume(0.1f);
             currentSong.setOnCompletionListener(new Music.OnCompletionListener() {

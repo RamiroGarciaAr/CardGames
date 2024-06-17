@@ -15,16 +15,24 @@ public class Card implements Comparable<Card> {
     private Vector2 cardPosition;
     private Vector2 cardSize;
     private Texture texture;
+    private Texture borderTexture;
     public static final int CARD_WIDTH = 100;
     public static final int CARD_HEIGHT = 150;
 
-    public Card(String typeName, int value, TextureManager textureManager) {
+    public Card(String typeName, int value, TextureManager textureManager,BorderTextureManager borderTextureManager, Colors borderColor) {
         this.type = new Type(typeName);
         this.value = value;
         this.texture = textureManager.getRandomTextureOfType(typeName);
         this.cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
         this.cardPosition = new Vector2();
         this.numberPivot = new Vector2();
+
+
+        if (borderColor != null) {
+            this.borderTexture = borderTextureManager.getBorderTexture(borderColor);
+        } else {
+            this.borderTexture = borderTextureManager.getRandomBorderTexture();
+        }
     }
 
     public Type getType() {
@@ -62,6 +70,9 @@ public class Card implements Comparable<Card> {
     public void drawCardBatch(SpriteBatch batch, BitmapFont font) {
         if (texture != null) {
             batch.draw(texture, cardPosition.x, cardPosition.y, cardSize.x, cardSize.y);
+            if (borderTexture != null) {
+                batch.draw(borderTexture, cardPosition.x, cardPosition.y, cardSize.x, cardSize.y);
+            }
             drawCardNumber(font, batch);
         }
     }
@@ -82,8 +93,8 @@ public class Card implements Comparable<Card> {
 
     private void drawCardNumber(BitmapFont font, SpriteBatch batch) {
         String numberText = String.valueOf(value);
-        float numberX = cardPosition.x + cardSize.x - 26;
-        float numberY = cardPosition.y + cardSize.y - 26 + font.getLineHeight() / 2;
+        float numberX = cardPosition.x + cardSize.x - 15.5f;
+        float numberY = cardPosition.y + cardSize.y - 15 + font.getLineHeight() / 2;
         font.draw(batch, numberText, numberX, numberY);
     }
     public boolean isTouched(float touchX, float touchY)
