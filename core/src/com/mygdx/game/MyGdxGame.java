@@ -23,20 +23,26 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Player player;
 	private AI machine;
 	private float mouseX,mouseY;
-	private Sound placementSound;
-	private Music gameMusic;
+	private Sound placementSound,highlightSound;
 	private static final int NUM_CARDS_IN_HAND = 3;
+
+	private boolean mouseOverHighlightedCard = false;
 	Texture backgroundTexture = null;
+
 	@Override
-	public void create()
-	{
+	public void create() {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		LoadRandomBackgroundImage();
+		LoadSounds();
 		font = new BitmapFont();
 		font.setColor(Color.WHITE);
 
 		String[] typeNames = {"Water", "Fire", "Earth"};
+
+		MusicPlayer musicPlayer = new MusicPlayer();
+		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
+		musicPlayer.play();
 
 		gameManager = new GameManager(typeNames, 10);
 		gameManager.addTypeRelation("Water", "Fire");
@@ -63,12 +69,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 	}
-	private void LoadSounds()
-	{
-		FileHandle folder = Gdx.files.internal("assets/Sounds/");
-		if (folder.exists() && folder.isDirectory())
-		{
-			placementSound = 
+
+	private void LoadSounds() {
+		FileHandle SFXfolder = Gdx.files.internal("assets/Sounds/SFX");
+		if (SFXfolder.exists() && SFXfolder.isDirectory()) {
+			placementSound = Gdx.audio.newSound(SFXfolder.child("card_impact_sfx.wav"));
+			highlightSound = Gdx.audio.newSound(SFXfolder.child("card_highlight_sfx.wav"));
 		}
 
 	}
@@ -106,23 +112,22 @@ public class MyGdxGame extends ApplicationAdapter {
 			Card selectedCard = getSelectedCard(mouseX,mouseY);
 			if (selectedCard != null) {
 				System.out.println("Pressed " + selectedCard.toString());
+				placementSound.play(0.5f);
 				gameManager.playRound(selectedCard,player,machine);
-				if (winGameCondition(player))
-				{
+				if (winGameCondition(player)) {
 					System.out.println("PLAYER WON");
-				}
-				else if (winGameCondition(machine))
-				{
+				} else if (winGameCondition(machine)) {
 					System.out.println("MACHINE WON");
 				}
 			}
 		}
 	}
+
 	//Esto puede ser un metodo abstracto que se crea en al GM
-	private boolean winGameCondition(Player player)
-	{
+	private boolean winGameCondition(Player player) {
 		return player.getScore() == 2;
 	}
+
 
 	private void highlightCardUnderMouse() {
 		float mouseX = Gdx.input.getX();
@@ -131,11 +136,22 @@ public class MyGdxGame extends ApplicationAdapter {
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.setColor(Color.YELLOW); // Definir el color una vez fuera del bucle
 
+		boolean highlightFound = false;
+
 		for (Card card : player.getCardsInHand()) {
 			if (card.isTouched(mouseX, mouseY)) {
 				card.highlightCard(shapeRenderer); // Resaltar la carta sin llamar a begin/end dentro del bucle
+				highlightFound = true;
 			}
 		}
+		if (highlightFound && !mouseOverHighlightedCard && highlightSound != null) {
+			highlightSound.play(0.25f);
+			mouseOverHighlightedCard = true;
+		} else if (!highlightFound)
+		{
+			mouseOverHighlightedCard = false;
+		}
+
 
 		shapeRenderer.end();
 	}
