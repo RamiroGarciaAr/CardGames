@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -15,7 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Random;
 
-public class MyGdxGame extends ApplicationAdapter {
+public class MyGdxGame extends ApplicationAdapter
+{
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private ShapeRenderer shapeRenderer;
@@ -41,16 +41,20 @@ public class MyGdxGame extends ApplicationAdapter {
 		font = new BitmapFont();
 		font.setColor(Color.WHITE);
 
-		String[] typeNames = {"Water", "Fire", "Earth"};
-
 		MusicPlayer musicPlayer = new MusicPlayer();
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
+
+		String[] typeNames = {"Water", "Fire", "Earth"};
 
 		gameManager = new GameManager(typeNames, 10);
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
 		gameManager.addTypeRelation("Earth", "Water");
+
+		gameManager.assignColorToType("Water",Colors.OCEAN);
+		gameManager.assignColorToType("Fire",Colors.ORANGE);
+		gameManager.assignColorToType("Earth",Colors.GREEN);
 
 		player = new Player(0, NUM_CARDS_IN_HAND);
 		machine = new AI(0, NUM_CARDS_IN_HAND);
@@ -59,34 +63,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		gameManager.dealInitialCards(machine, NUM_CARDS_IN_HAND);
 	}
 
-	private void LoadRandomBackgroundImage() {
-		FileHandle folder = Gdx.files.internal("assets/Backgrounds/");
-		if (folder.exists() && folder.isDirectory()) {
-			FileHandle[] backgrounds = folder.list();
-			if (backgrounds.length > 1) {
-				int index = new Random().nextInt(backgrounds.length);
-				backgroundTexture = new Texture(backgrounds[index]);
-			} else backgroundTexture = new Texture(backgrounds[0]);
-		} else {
-			Gdx.app.error("TextureManager", "Backgrounds directory is missing or not found.");
-		}
-
-	}
-
-	private void LoadSounds() {
-		FileHandle SFXfolder = Gdx.files.internal("assets/Sounds/SFX");
-		if (SFXfolder.exists() && SFXfolder.isDirectory()) {
-			placementSound = Gdx.audio.newSound(SFXfolder.child("card_impact_sfx.wav"));
-			highlightSound = Gdx.audio.newSound(SFXfolder.child("card_highlight_sfx.wav"));
-		}
-
-	}
-
 	@Override
 	public void render()
 	{
 		if (gameEnded) {
-			new EndScreen(playerWon).render(Gdx.graphics.getDeltaTime());
+			//new EndScreen(playerWon).render(Gdx.graphics.getDeltaTime());
 			return;
 		}
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -138,6 +119,29 @@ public class MyGdxGame extends ApplicationAdapter {
 		return player.getScore() == 2;
 	}
 
+
+	private void LoadRandomBackgroundImage() {
+		FileHandle folder = Gdx.files.internal("assets/Backgrounds/");
+		if (folder.exists() && folder.isDirectory()) {
+			FileHandle[] backgrounds = folder.list();
+			if (backgrounds.length > 1) {
+				int index = new Random().nextInt(backgrounds.length);
+				backgroundTexture = new Texture(backgrounds[index]);
+			} else backgroundTexture = new Texture(backgrounds[0]);
+		} else {
+			Gdx.app.error("TextureManager", "Backgrounds directory is missing or not found.");
+		}
+
+	}
+
+	private void LoadSounds() {
+		FileHandle SFXfolder = Gdx.files.internal("assets/Sounds/SFX");
+		if (SFXfolder.exists() && SFXfolder.isDirectory()) {
+			placementSound = Gdx.audio.newSound(SFXfolder.child("card_impact_sfx.wav"));
+			highlightSound = Gdx.audio.newSound(SFXfolder.child("card_highlight_sfx.wav"));
+		}
+
+	}
 
 	private void highlightCardUnderMouse() {
 		float mouseX = Gdx.input.getX();

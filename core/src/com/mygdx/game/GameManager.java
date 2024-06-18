@@ -2,13 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GameManager
 {
     private final List<Type> cardTypes;
+
     public final Deck deck;
     private int amountOfRounds;
     private int roundTimer;
@@ -56,6 +55,9 @@ public class GameManager
         }
         else
             Gdx.app.error("GameManager", "ERROR: One of the players has used a NULL card");
+    }
+    public void assignColorToType(String typeName, Colors color) {
+        deck.assignColorToType(typeName,color);
     }
     private void initializeCardTypes(String[] typeNames)
     {

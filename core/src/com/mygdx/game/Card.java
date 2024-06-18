@@ -8,14 +8,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class Card implements Comparable<Card> {
-    private Type type;
-    private int value;
-
-    private Vector2 numberPivot;
+    private final Type type;
+    private final int value;
     private Vector2 cardPosition;
     private Vector2 cardSize;
-    private Texture texture;
-    private Texture borderTexture;
+    private final Texture texture;
+    private final Texture borderTexture;
     public static final int CARD_WIDTH = 100;
     public static final int CARD_HEIGHT = 150;
 
@@ -25,7 +23,6 @@ public class Card implements Comparable<Card> {
         this.texture = textureManager.getRandomTextureOfType(typeName);
         this.cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
         this.cardPosition = new Vector2();
-        this.numberPivot = new Vector2();
 
 
         if (borderColor != null) {
@@ -47,16 +44,8 @@ public class Card implements Comparable<Card> {
         return cardSize;
     }
 
-    public Vector2 getNumberPivot() {
-        return numberPivot;
-    }
-
     public Vector2 getCardPosition() {
         return cardPosition;
-    }
-
-    public void setNumberPivot(float x, float y) {
-        numberPivot = new Vector2(x, y);
     }
 
     public void setCardPosition(float x, float y) {

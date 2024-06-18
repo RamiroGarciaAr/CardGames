@@ -9,10 +9,13 @@ public class Type
     private final String typeName;
     private final Set<String> winSet;
 
+    private Colors color;
+
     public Type(String typeName)
     {
         this.typeName = typeName;
         this.winSet = new HashSet<>();
+        this.color = null;
     }
     public void addBeats(String otherTypeName)
     {
@@ -26,6 +29,11 @@ public class Type
     {
         return winSet.contains(otherType.typeName);
     }
+    public void setBorderColorofType(Colors color)
+    {
+        this.color = color;
+    }
+    public Colors getColor() { return this.color; }
     @Override
     public String toString()
     {
