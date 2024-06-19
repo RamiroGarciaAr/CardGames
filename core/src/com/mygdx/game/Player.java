@@ -40,4 +40,15 @@ public class Player
         }
         return  null;
     }
+
+    public Card drawCard(Deck deck)
+    {
+        if (!cardsInHand.isEmpty())
+        {
+            Card cardRemoved = cardsInHand.remove(0);
+            cardsInHand.add(0,deck.drawCard());
+            return cardRemoved;
+        }
+        else return null;
+    }
 }

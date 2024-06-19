@@ -30,6 +30,8 @@ public class MyGdxGame extends ApplicationAdapter
 	Texture backgroundTexture = null;
 
 	private boolean gameEnded = false;
+
+	private Deck deck;
 	private boolean playerWon;
 
 	@Override
@@ -48,19 +50,33 @@ public class MyGdxGame extends ApplicationAdapter
 		String[] typeNames = {"Water", "Fire", "Earth"};
 
 		gameManager = new GameManager(typeNames, 10);
+
+		// Crear el mazo y asignar colores a tipos específicos
+		//
+		//
+		//deck.assignColorToType("Earth", Colors.LIME,true);
+		deck = new Deck(typeNames, 10);
+		deck.assignColorToType("Water", Colors.CORNFLOWER,true);
+		deck.assignColorToType("Fire", Colors.MAGENTA,true);
+		deck.assignColorToType("Earth", Colors.LIME,true);
+		// Asignar habilidades especiales a una carta específica
+		deck.AddSpecialAbilityTo("Water", 1, new MoveCardsAction("deck", "player", 1));
+		deck.generateDeck();
+
+		//
+
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
 		gameManager.addTypeRelation("Earth", "Water");
 
-		gameManager.assignColorToType("Water",Colors.OCEAN);
-		gameManager.assignColorToType("Fire",Colors.ORANGE);
-		gameManager.assignColorToType("Earth",Colors.GREEN);
+
+
 
 		player = new Player(0, NUM_CARDS_IN_HAND);
 		machine = new AI(0, NUM_CARDS_IN_HAND);
 
-		gameManager.dealInitialCards(player, NUM_CARDS_IN_HAND);
-		gameManager.dealInitialCards(machine, NUM_CARDS_IN_HAND);
+		gameManager.dealInitialCards(player, NUM_CARDS_IN_HAND,deck);
+		gameManager.dealInitialCards(machine, NUM_CARDS_IN_HAND,deck);
 	}
 
 	@Override

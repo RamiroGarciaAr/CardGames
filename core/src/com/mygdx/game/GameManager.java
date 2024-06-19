@@ -8,7 +8,6 @@ public class GameManager
 {
     private final List<Type> cardTypes;
 
-    public final Deck deck;
     private int amountOfRounds;
     private int roundTimer;
 
@@ -16,20 +15,17 @@ public class GameManager
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
-        this.deck = new Deck(typeNames,maxNumberOnDeck);
     }
     public GameManager(String[] typeNames,int maxNumberOnDeck,int amountOfRounds)
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
-        this.deck = new Deck(typeNames,maxNumberOnDeck);
         this.amountOfRounds = amountOfRounds;
     }
     public GameManager(String[] typeNames,int maxNumberOnDeck,int amountOfRounds,int roundTimer)
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
-        this.deck = new Deck(typeNames,maxNumberOnDeck);
         this.amountOfRounds = amountOfRounds;
         this.roundTimer = roundTimer;
     }
@@ -56,9 +52,7 @@ public class GameManager
         else
             Gdx.app.error("GameManager", "ERROR: One of the players has used a NULL card");
     }
-    public void assignColorToType(String typeName, Colors color) {
-        deck.assignColorToType(typeName,color);
-    }
+
     private void initializeCardTypes(String[] typeNames)
     {
         for (String typeName : typeNames)
@@ -82,15 +76,12 @@ public class GameManager
             type.addBeats(beatsTypeName);
         }
     }
-    public void dealInitialCards(Player player,int numCards)
+    public void dealInitialCards(Player player,int numCards, Deck deck)
     {
         for(int i=0; i<numCards;i++ )
         {
             player.addCardToHand(deck.drawCard());
         }
     }
-    public Deck getDeck()
-    {
-        return deck;
-    }
+
 }
