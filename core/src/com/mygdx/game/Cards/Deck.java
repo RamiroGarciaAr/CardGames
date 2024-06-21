@@ -1,6 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.Cards;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Managers.BorderTextureManager;
+import com.mygdx.game.Managers.TextureManager;
+
 import java.util.*;
 
 public class Deck {
@@ -9,14 +12,12 @@ public class Deck {
     private BorderTextureManager borderTextureManager;
     private HashMap<String, Colors> typeColorsMap = new HashMap<>();
 
-    private String[] typeNames;
+    private ArrayList<String> typeNames;
     private int maxNumberOnDeck;
 
-    public Deck(String[] typeNames, int maxNumberOnDeck) {
+    public Deck(ArrayList<String> typeNames, int maxNumberOnDeck) {
         this.textureManager = new TextureManager(typeNames);
         this.borderTextureManager = new BorderTextureManager();
-
-        Gdx.app.log("Deck", "Type names: " + Arrays.toString(typeNames) + " | Initial Map Size: " + typeColorsMap.size());
 
         assignRandomColorsToTypesIfNeeded(typeNames);
 
@@ -58,12 +59,27 @@ public class Deck {
             }
         }
     }
+    public void AddSpecialAbilityTo(int cardValue, CardAction action)
+    {
+        for (Card card : deck)
+        {
+            for (String typeName : typeNames)
+            {
+                if (card.getType().toString().equals(typeName) && card.getValue() == cardValue) {
+                    card.setSpecialAction(action);
+                    System.out.println("Special ability added to " + typeName + " " + cardValue);
+                    break; // Assuming only one card should have this ability
+                }
+            }
+
+        }
+    }
 
     public void assignColorToType(String typeName, Colors color) {
         assignColorToType(typeName, color, false);
     }
 
-    private void assignRandomColorsToTypesIfNeeded(String[] typeNames) {
+    private void assignRandomColorsToTypesIfNeeded(ArrayList<String> typeNames) {
         Colors[] colors = Colors.values();
         Random random = new Random();
         for (String typeName : typeNames) {
@@ -101,6 +117,10 @@ public class Deck {
         } else {
             return null;
         }
+    }
+    public ArrayList<Card> getDeck()
+    {
+        return deck;
     }
 
     public void addCard(Card cardToMove)

@@ -1,15 +1,17 @@
 
-package com.mygdx.game;
+package com.mygdx.game.Players;
+
+import com.mygdx.game.Cards.Card;
+import com.mygdx.game.Cards.Deck;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Player
 {
     private int score;
     private final int amountOfCardInHand;
     private ArrayList<Card> cardsInHand;
-    Player(int startingScore,int amountOfCardInHand)
+    public Player(int startingScore, int amountOfCardInHand)
     {
         cardsInHand = new ArrayList<>();
         this.score = startingScore;
@@ -24,7 +26,7 @@ public class Player
     {
         this.score = score;
     }
-    public List<Card> getCardsInHand()
+    public ArrayList<Card> getCardsInHand()
     {
         return cardsInHand;
     }

@@ -1,17 +1,39 @@
-package com.mygdx.game;
+package com.mygdx.game.Cards;
 
+
+import com.badlogic.gdx.Gdx;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MoveCardsAction implements CardAction {
-    private final String from;
-    private final String to;
+
+    private ArrayList<Card> from;
     private final int amount;
 
-    public MoveCardsAction(String from, String to, int amount) {
-        this.from = from;
-        this.to = to;
+    public MoveCardsAction(ArrayList<Card> to, int amount) {
+        this.from = to;
         this.amount = amount;
     }
+    //Swap
+    private void moveCards(ArrayList<Card> from, ArrayList<Card> to,int amount) {
 
+        int size = from.size();
+        if (amount > size)
+        {
+            Gdx.app.error("Move Cards", String.format("Cannot remove %d from a deck with %d cards", amount, size));
+        }
+        for (int i=0; i<amount; i++) {
+            to.add(to.size(), from.remove(0));
+        }
+    }
+
+    @Override
+    public void execute() {
+      //  ArrayList<Card> to = (fromUser ? userDeck : computerDeck);
+      //  moveCards(from, to, amount);
+    }
+/*
     @Override
     public void execute(Player fromPlayer, Player toPlayer, Deck deck, GameManager gameManager) {
         for (int i = 0; i < amount; i++) {
@@ -42,4 +64,6 @@ public class MoveCardsAction implements CardAction {
             }
         }
     }
+
+ */
 }

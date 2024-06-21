@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Cards;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.mygdx.game.Managers.BorderTextureManager;
+import com.mygdx.game.Managers.TextureManager;
 
 public class Card implements Comparable<Card> {
     private final Type type;
@@ -106,11 +108,6 @@ public class Card implements Comparable<Card> {
         isSpecialCard = true;
     }
 
-    public void executeAction(Player player, Player opponent, Deck deck, GameManager gameManager) {
-        if (specialAction != null) {
-            specialAction.execute(player, opponent, deck, gameManager);
-        }
-    }
     public void animateToPosition(float x, float y, float duration) {
         isAnimating = true;
         Action moveAction = Actions.moveTo(x, y, duration);

@@ -11,7 +11,15 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.Cards.Card;
+import com.mygdx.game.Cards.Colors;
+import com.mygdx.game.Cards.Deck;
+import com.mygdx.game.Cards.MoveCardsAction;
+import com.mygdx.game.Managers.MusicPlayer;
+import com.mygdx.game.Players.AI;
+import com.mygdx.game.Players.Player;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MyGdxGame extends ApplicationAdapter
@@ -47,30 +55,37 @@ public class MyGdxGame extends ApplicationAdapter
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
 
-		String[] typeNames = {"Water", "Fire", "Earth"};
+		int numbersOnDeck = 10;
+		ArrayList<String> typeNames = new ArrayList<String>();
 
-		gameManager = new GameManager(typeNames, 10);
+		typeNames.add("Water");
+		typeNames.add("Earth");
+		typeNames.add("Fire");
 
-		// Crear el mazo y asignar colores a tipos específicos
-		//
-		//
-		//deck.assignColorToType("Earth", Colors.LIME,true);
-		deck = new Deck(typeNames, 10);
+		gameManager = new GameManager(typeNames, numbersOnDeck);
+
+
+		deck = new Deck(typeNames, numbersOnDeck);
 		deck.assignColorToType("Water", Colors.CORNFLOWER,true);
 		deck.assignColorToType("Fire", Colors.MAGENTA,true);
 		deck.assignColorToType("Earth", Colors.LIME,true);
 		// Asignar habilidades especiales a una carta específica
-		deck.AddSpecialAbilityTo("Water", 1, new MoveCardsAction("deck", "player", 1));
-		deck.generateDeck();
+		//deck.AddSpecialAbilityTo("Water", 1, new MoveCardsAction("deck", "player", 1));
 
-		//
+		//Test 1
+		deck.AddSpecialAbilityTo(7,new MoveCardsAction(deck.getDeck(),3));
+
+		//Test 2
+		deck.AddSpecialAbilityTo("Earth",13,new MoveCardsAction(deck.getDeck(),2));
+
+
 
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
 		gameManager.addTypeRelation("Earth", "Water");
 
 
-
+		deck.generateDeck();
 
 		player = new Player(0, NUM_CARDS_IN_HAND);
 		machine = new AI(0, NUM_CARDS_IN_HAND);
@@ -234,14 +249,3 @@ public class MyGdxGame extends ApplicationAdapter
 	}
 }
 
-class CardComparator {
-	public static int compare(Card o1, Card o2) {
-		if (o1.getType().canBeat(o2.getType())) {
-			return 1;
-		} else if (o2.getType().canBeat(o1.getType())) {
-			return -1;
-		} else {
-			return o1.compareTo(o2);
-		}
-	}
-}

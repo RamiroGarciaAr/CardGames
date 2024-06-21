@@ -1,35 +1,41 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-
+import com.mygdx.game.Cards.Card;
+import com.mygdx.game.Cards.Deck;
+import com.mygdx.game.Players.AI;
+import com.mygdx.game.Players.Player;
+import com.mygdx.game.Cards.Type;
 import java.util.*;
 
 public class GameManager
 {
     private final List<Type> cardTypes;
-
+    private Player playing;
     private int amountOfRounds;
     private int roundTimer;
 
-    public GameManager(String[] typeNames, int maxNumberOnDeck)
+    public GameManager(ArrayList<String> typeNames, int maxNumberOnDeck)
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
     }
-    public GameManager(String[] typeNames,int maxNumberOnDeck,int amountOfRounds)
+    public GameManager(ArrayList<String> typeNames,int maxNumberOnDeck,int amountOfRounds)
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
         this.amountOfRounds = amountOfRounds;
     }
-    public GameManager(String[] typeNames,int maxNumberOnDeck,int amountOfRounds,int roundTimer)
+    public GameManager(ArrayList<String>  typeNames, int maxNumberOnDeck, List<Type> cardTypes, int amountOfRounds, int roundTimer)
     {
-        this.cardTypes = new ArrayList<>();
+        this.cardTypes = cardTypes;
         initializeCardTypes(typeNames);
         this.amountOfRounds = amountOfRounds;
         this.roundTimer = roundTimer;
     }
-    public void playRound(Card playerCard,Player player,AI machine)
+
+
+    public void playRound(Card playerCard, Player player, AI machine)
     {
         if (playerCard != null)
         {
@@ -53,7 +59,7 @@ public class GameManager
             Gdx.app.error("GameManager", "ERROR: One of the players has used a NULL card");
     }
 
-    private void initializeCardTypes(String[] typeNames)
+    private void initializeCardTypes(ArrayList<String> typeNames)
     {
         for (String typeName : typeNames)
         {
@@ -84,4 +90,15 @@ public class GameManager
         }
     }
 
+}
+class CardComparator {
+    public static int compare(Card o1, Card o2) {
+        if (o1.getType().canBeat(o2.getType())) {
+            return 1;
+        } else if (o2.getType().canBeat(o1.getType())) {
+            return -1;
+        } else {
+            return o1.compareTo(o2);
+        }
+    }
 }

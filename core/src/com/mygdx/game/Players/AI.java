@@ -1,11 +1,13 @@
-package com.mygdx.game;
+package com.mygdx.game.Players;
+
+import com.mygdx.game.Cards.Card;
 
 import java.util.Random;
 
 public class AI extends Player
 {
 
-    AI(int startingScore, int amountOfCardInHand) {
+    public AI(int startingScore, int amountOfCardInHand) {
         super(startingScore, amountOfCardInHand);
     }
 

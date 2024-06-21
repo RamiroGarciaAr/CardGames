@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Cards;
 
 public enum Colors {
     AMBER,

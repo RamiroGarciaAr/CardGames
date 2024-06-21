@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.Managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -9,7 +9,7 @@ import java.util.*;
 public class TextureManager {
     private final Map<String, ArrayList<Texture>> textureMap = new HashMap<>();
 
-    public TextureManager(String[] typeNames)
+    public TextureManager(ArrayList<String> typeNames)
     {
         // Print current working directory
         for (String folderTypeName : typeNames) {

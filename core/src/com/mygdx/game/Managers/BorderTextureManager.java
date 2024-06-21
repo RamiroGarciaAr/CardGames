@@ -1,8 +1,10 @@
-package com.mygdx.game;
+package com.mygdx.game.Managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.Cards.Colors;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
