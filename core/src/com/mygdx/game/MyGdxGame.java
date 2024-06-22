@@ -1,4 +1,4 @@
-//====================== End Prologue =======================
+//====================== Prologue =======================
 package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -55,7 +55,9 @@ public class MyGdxGame extends ApplicationAdapter
 		MusicPlayer musicPlayer = new MusicPlayer();
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
+
 		//====================== End Prologue =======================
+
 		int numbersOnDeck = 10;
 		int numbersOfCardsInHand = 3;
 		ArrayList<String> typeNames = new ArrayList<String>();
@@ -82,10 +84,11 @@ public class MyGdxGame extends ApplicationAdapter
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
 		gameManager.addTypeRelation("Earth", "Water");
-
+		
+		//====================== Epilogue =======================
 		player = new Player(0, numbersOfCardsInHand);
 		machine = new AI(0, numbersOfCardsInHand);
-		//====================== Epilogue =======================
+
 		gameManager.dealInitialCards(player, numbersOfCardsInHand, deck);
 		gameManager.dealInitialCards(machine, numbersOfCardsInHand, deck);
 	}
