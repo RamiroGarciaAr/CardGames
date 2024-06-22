@@ -13,7 +13,7 @@ public class Deck {
     private HashMap<String, Colors> typeColorsMap = new HashMap<>();
 
     private ArrayList<String> typeNames;
-    private int maxNumberOnDeck;
+    private final int maxNumberOnDeck;
 
     public Deck(ArrayList<String> typeNames, int maxNumberOnDeck) {
         this.textureManager = new TextureManager(typeNames);
@@ -21,8 +21,6 @@ public class Deck {
 
         assignRandomColorsToTypesIfNeeded(typeNames);
 
-        Gdx.app.log("Deck", "Map Size after random assignment: " + typeColorsMap.size());
-        logTypeColorsMap();
         this.typeNames = typeNames;
         this.maxNumberOnDeck = maxNumberOnDeck;
 
@@ -39,39 +37,42 @@ public class Deck {
 
     public void assignColorToType(String typeName, Colors color, boolean forceUpdate) {
         if (typeColorsMap.containsKey(typeName) && !forceUpdate) {
-            Gdx.app.log("Deck", "Type " + typeName + " already has a color assigned: " + typeColorsMap.get(typeName));
             return;
         }
         if (typeColorsMap.containsValue(color) && !forceUpdate) {
             throw new IllegalArgumentException("Color already assigned to another type.");
         }
-        Gdx.app.log("Deck", "Adding color " + color + " to type " + typeName);
         typeColorsMap.put(typeName, color);
-        logTypeColorsMap();
     }
+    private Card findCardInDeck(String typeName, int cardValue) {
+        for (Card card : deck)
+        {
 
-    public void AddSpecialAbilityTo(String typeName, int cardValue, CardAction action) {
-        for (Card card : deck) {
-            if (card.getType().toString().equals(typeName) && card.getValue() == cardValue) {
-                card.setSpecialAction(action);
-                System.out.println("Special ability added to " + typeName + " " + cardValue);
-                break; // Assuming only one card should have this ability
+            if (Objects.equals(typeName, card.getType().toString()) && cardValue == card.getValue()) {
+                return card;
             }
         }
+        return null;
+    }
+    public void AddSpecialAbilityTo(String typeName, int cardValue, CardAction action) {
+       Card aux = findCardInDeck(typeName,cardValue);
+       if (aux == null)
+          Gdx.app.error("Deck","Null Card it is not in deck");
+       else
+        aux.setSpecialAction(action);
     }
     public void AddSpecialAbilityTo(int cardValue, CardAction action)
     {
-        for (Card card : deck)
+        for (String type : typeNames)
         {
-            for (String typeName : typeNames)
-            {
-                if (card.getType().toString().equals(typeName) && card.getValue() == cardValue) {
-                    card.setSpecialAction(action);
-                    System.out.println("Special ability added to " + typeName + " " + cardValue);
-                    break; // Assuming only one card should have this ability
-                }
-            }
-
+            AddSpecialAbilityTo(type,cardValue,action);
+        }
+    }
+    public void AddSpecialAbilityTo(String type,CardAction action)
+    {
+        for (int number=0 ;number<maxNumberOnDeck;number++)
+        {
+            AddSpecialAbilityTo(type,number,action);
         }
     }
 
@@ -89,19 +90,11 @@ public class Deck {
                     color = colors[random.nextInt(colors.length)];
                 } while (typeColorsMap.containsValue(color)); // Ensure unique colors for each type
                 typeColorsMap.put(typeName, color);
-                Gdx.app.log("Deck", "Assigned random color " + color + " to type " + typeName);
             }
         }
-        logTypeColorsMap();
     }
 
-    private void logTypeColorsMap() {
-        StringBuilder mapContents = new StringBuilder("Current typeColorsMap: ");
-        for (Map.Entry<String, Colors> entry : typeColorsMap.entrySet()) {
-            mapContents.append(entry.getKey()).append(" -> ").append(entry.getValue()).append(", ");
-        }
-        Gdx.app.log("Deck", mapContents.toString());
-    }
+
 
     public Colors getColorForType(String typeName) {
         return typeColorsMap.get(typeName);

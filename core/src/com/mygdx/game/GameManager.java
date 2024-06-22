@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.Cards.Card;
 import com.mygdx.game.Cards.Deck;
 import com.mygdx.game.Players.AI;
@@ -11,7 +12,7 @@ import java.util.*;
 public class GameManager
 {
     private final List<Type> cardTypes;
-    private Player playing;
+    private Player opponent;
     private int amountOfRounds;
     private int roundTimer;
 
@@ -40,11 +41,18 @@ public class GameManager
         if (playerCard != null)
         {
             //Turno del player
-            if (!machine.getCardsInHand().isEmpty())
+            opponent = machine;
+            if (playerCard.isSpecialCard())
             {
-
+                System.out.println("Player is using special card");
+                playerCard.getSpecialAction().execute(player);
+            }
+            if (!machine.getCardsInHand().isEmpty()) {
+                opponent = player;
                 Card machineCard = machine.playRandomCard();
                 //Turno de la maquina
+                if (machineCard.isSpecialCard())
+                    machineCard.getSpecialAction().execute(machine);
 
                 //Comparacion de cartas
                 int comparisonResult = CardComparator.compare(playerCard, machineCard);
@@ -62,7 +70,10 @@ public class GameManager
         else
             Gdx.app.error("GameManager", "ERROR: One of the players has used a NULL card");
     }
-
+    public Player getOpponent()
+    {
+        return opponent;
+    }
     private void initializeCardTypes(ArrayList<String> typeNames)
     {
         for (String typeName : typeNames)
@@ -92,6 +103,10 @@ public class GameManager
         {
             player.addCardToHand(deck.drawCard());
         }
+    }
+    private void animateCardToCenterOfScreen(Card card)
+    {
+
     }
 
 }

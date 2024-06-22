@@ -2,6 +2,7 @@ package com.mygdx.game.Cards;
 
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Players.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public class MoveCardsAction implements CardAction {
     }
 
     @Override
-    public void execute() {
-      //  ArrayList<Card> to = (fromUser ? userDeck : computerDeck);
+    public void execute(Player user) {
+        Gdx.app.log("Move Cards","Using");
       //  moveCards(from, to, amount);
     }
 /*

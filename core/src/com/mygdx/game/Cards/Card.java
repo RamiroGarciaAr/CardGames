@@ -6,11 +6,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.game.Managers.BorderTextureManager;
 import com.mygdx.game.Managers.TextureManager;
 
-public class Card implements Comparable<Card> {
+import java.util.Iterator;
+
+public class Card extends Actor implements Comparable<Card> {
     private final Type type;
     private final int value;
     private Vector2 cardPosition;
@@ -21,7 +25,7 @@ public class Card implements Comparable<Card> {
     public static final int CARD_HEIGHT = 150;
     private boolean isSpecialCard = false;
     private CardAction specialAction;
-    private boolean isAnimating = false;
+
 
 
     public Card(String typeName, int value, TextureManager textureManager, BorderTextureManager borderTextureManager, Colors borderColor) {
@@ -38,22 +42,36 @@ public class Card implements Comparable<Card> {
         }
     }
 
+    //Getters
     public Type getType() {
         return type;
     }
-
     public Vector2 getCardSize() {
         return cardSize;
     }
-
     public Vector2 getCardPosition() {
         return cardPosition;
     }
+    public int getValue() {
+        return value;
+    }
+    public CardAction getSpecialAction()
+    {
+        System.out.println("TEST");
+        return specialAction;
+    }
+    public boolean isSpecialCard() {
+        return isSpecialCard;
+    }
 
+    //Setters
     public void setCardPosition(float x, float y) {
         cardPosition = new Vector2(x, y);
     }
-
+    public void setSpecialAction(CardAction action) {
+        this.specialAction = action;
+        isSpecialCard = true;
+    }
     public void setCardSize(float x, float y) {
         cardSize = new Vector2(x, y);
     }
@@ -66,10 +84,6 @@ public class Card implements Comparable<Card> {
             }
             drawCardNumber(font, batch);
         }
-    }
-
-    public boolean isSpecialCard() {
-        return isSpecialCard;
     }
 
     private void drawCardNumber(BitmapFont font, SpriteBatch batch) {
@@ -99,18 +113,17 @@ public class Card implements Comparable<Card> {
         return value + " of " + type.toString();
     }
 
-    public int getValue() {
-        return value;
+    //Actor
+    public void animateToPosition(float x, float y, float duration)
+    {
+        MoveToAction placementAction = new MoveToAction();
+        placementAction.setPosition(x,y);
+        placementAction.setDuration(duration);
     }
-
-    public void setSpecialAction(CardAction action) {
-        this.specialAction = action;
-        isSpecialCard = true;
-    }
-
-    public void animateToPosition(float x, float y, float duration) {
-        isAnimating = true;
-        Action moveAction = Actions.moveTo(x, y, duration);
-        // To actually animate, you need to use a Stage and Actors, or manually update position.
+    @Override
+    public void act(float delta){
+        for(Iterator<Action> iter = this.getActions().iterator(); iter.hasNext();){
+            iter.next().act(delta);
+        }
     }
 }
