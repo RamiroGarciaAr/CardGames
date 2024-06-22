@@ -9,11 +9,11 @@ import java.util.List;
 
 public class MoveCardsAction implements CardAction {
 
-    private ArrayList<Card> from;
+    private ArrayList<Card> to;
     private final int amount;
 
     public MoveCardsAction(ArrayList<Card> to, int amount) {
-        this.from = to;
+        this.to = to;
         this.amount = amount;
     }
     //Swap

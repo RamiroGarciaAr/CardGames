@@ -44,7 +44,7 @@ public class Deck {
         }
         typeColorsMap.put(typeName, color);
     }
-    private Card findCardInDeck(String typeName, int cardValue) {
+    public Card findCardInDeck(String typeName, int cardValue) {
         for (Card card : deck)
         {
 

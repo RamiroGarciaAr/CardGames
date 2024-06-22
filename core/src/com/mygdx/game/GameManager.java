@@ -27,13 +27,14 @@ public class GameManager
         initializeCardTypes(typeNames);
         this.amountOfRounds = amountOfRounds;
     }
-    public GameManager(ArrayList<String>  typeNames, int maxNumberOnDeck, List<Type> cardTypes, int amountOfRounds, int roundTimer)
+    public GameManager(ArrayList<String>  typeNames, int maxNumberOnDeck, int amountOfRounds, int roundTimer)
     {
-        this.cardTypes = cardTypes;
+        this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
         this.amountOfRounds = amountOfRounds;
         this.roundTimer = roundTimer;
     }
+
 
 
     public void playRound(Card playerCard, Player player, AI machine)

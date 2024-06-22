@@ -12,14 +12,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.Cards.Card;
+import com.mygdx.game.Cards.*;
 import com.mygdx.game.Cards.Colors;
-import com.mygdx.game.Cards.Deck;
-import com.mygdx.game.Cards.MoveCardsAction;
 import com.mygdx.game.Managers.MusicPlayer;
 import com.mygdx.game.Players.AI;
 import com.mygdx.game.Players.Player;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 public class MyGdxGame extends ApplicationAdapter
@@ -38,6 +37,8 @@ public class MyGdxGame extends ApplicationAdapter
 	private GameManager gameManager;
 	private Player player;
 	private AI machine;
+	private int startingMachineScore=0;
+	private int startingPlayerScore=0;
 	private boolean mouseOverHighlightedCard = false;
 
 
@@ -55,39 +56,55 @@ public class MyGdxGame extends ApplicationAdapter
 		MusicPlayer musicPlayer = new MusicPlayer();
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
-
+		ArrayList<String> typeNames = new ArrayList<String>(); //AGREGAR
 		//====================== End Prologue =======================
+		//Test 3
+		int numbersOnDeck = 10; // NumbersOnDeck(10)
 
-		int numbersOnDeck = 10;
-		int numbersOfCardsInHand = 3;
-		ArrayList<String> typeNames = new ArrayList<String>();
-
+		//TypesOfCards(Water, Fire, Earth)
 		typeNames.add("Water");
-		typeNames.add("Earth");
 		typeNames.add("Fire");
+		typeNames.add("Earth");
 
-		gameManager = new GameManager(typeNames, numbersOnDeck);
+		int numbersOfCardsInHand = 3; //CardsByPlayer(3)
+
+		StartingScore(100, 400); //StartingScore
+
+		int roundTimer =30; //RoundsTimer(30)
+		int rounds = 30; //Rounds(30)
+
+		gameManager = new GameManager(typeNames, numbersOnDeck,rounds,roundTimer);
 
 		Deck deck = new Deck(typeNames, numbersOnDeck);
+
 		deck.assignColorToType("Water", Colors.CORNFLOWER,true);
 		deck.assignColorToType("Fire", Colors.MAGENTA,true);
 		deck.assignColorToType("Earth", Colors.LIME,true);
 
 		deck.generateDeck(); // Hay que generar el deck antes de llamar a las habilidades
 		// Asignar habilidades especiales a una carta específica
+		//Test 0
+		deck.AddSpecialAbilityTo("Water",3, new ScoreModifierAction(3));
 		//Test 1 - Crea una carta que cuando se activa saca 3 cartas del deck
 		deck.AddSpecialAbilityTo(7,new MoveCardsAction(deck.getDeck(),3));
 		//Test 2
 		deck.AddSpecialAbilityTo("Earth",10,new MoveCardsAction(deck.getDeck(),2));
+		//Test 4
+		for (Card card : deck.getDeck())
+		{
+			if (card.getValue() % 2 == 0)
+				deck.AddSpecialAbilityTo("Water",card.getValue(),new LookAtAction(1));
+		}
 
-		//Asignamos que tipo le gana a que
+		//Test 5 - Asignamos que tipo le gana a que
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
 		gameManager.addTypeRelation("Earth", "Water");
-		
+
 		//====================== Epilogue =======================
-		player = new Player(0, numbersOfCardsInHand);
-		machine = new AI(0, numbersOfCardsInHand);
+		player = new Player(startingPlayerScore, numbersOfCardsInHand);
+		machine = new AI(startingMachineScore, numbersOfCardsInHand);
+
 
 		gameManager.dealInitialCards(player, numbersOfCardsInHand, deck);
 		gameManager.dealInitialCards(machine, numbersOfCardsInHand, deck);
@@ -200,7 +217,11 @@ public class MyGdxGame extends ApplicationAdapter
 		}
 		shapeRenderer.end();
 	}
-
+	private void StartingScore(int playerScore,int machineScore)
+	{
+		this.startingPlayerScore = playerScore;
+		this.startingMachineScore = machineScore;
+	}
 
 	private void drawPlayerCardsBatch(Player player, float startX, float startY) {
 		float cardSpacing = 20;
