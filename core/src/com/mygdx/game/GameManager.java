@@ -39,10 +39,14 @@ public class GameManager
     {
         if (playerCard != null)
         {
+            //Turno del player
             if (!machine.getCardsInHand().isEmpty())
             {
-                Card machineCard = machine.playRandomCard();
 
+                Card machineCard = machine.playRandomCard();
+                //Turno de la maquina
+
+                //Comparacion de cartas
                 int comparisonResult = CardComparator.compare(playerCard, machineCard);
                 if (comparisonResult > 0) {
                     player.setScore(player.getScore() + 1);
