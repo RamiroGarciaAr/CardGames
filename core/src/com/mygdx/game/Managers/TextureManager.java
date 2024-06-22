@@ -9,7 +9,7 @@ import java.util.*;
 public class TextureManager {
     private final Map<String, ArrayList<Texture>> textureMap = new HashMap<>();
 
-    public TextureManager(ArrayList<String> typeNames)
+    public TextureManager(String[] typeNames)
     {
         // Print current working directory
         for (String folderTypeName : typeNames) {

@@ -56,15 +56,16 @@ public class MyGdxGame extends ApplicationAdapter
 		MusicPlayer musicPlayer = new MusicPlayer();
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
-		ArrayList<String> typeNames = new ArrayList<String>(); //AGREGAR
+		//ArrayList<String> typeNames = new ArrayList<String>(); //AGREGAR
 		//====================== End Prologue =======================
 		//Test 3
 		int numbersOnDeck = 10; // NumbersOnDeck(10)
 
 		//TypesOfCards(Water, Fire, Earth)
-		typeNames.add("Water");
-		typeNames.add("Fire");
-		typeNames.add("Earth");
+		String[] typeNames = {"Water","Fire","Earth"};
+//		typeNames.add("Water");
+//		typeNames.add("Fire");
+//		typeNames.add("Earth");
 
 		int numbersOfCardsInHand = 3; //CardsByPlayer(3)
 

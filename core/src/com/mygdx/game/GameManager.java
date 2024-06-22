@@ -16,18 +16,18 @@ public class GameManager
     private int amountOfRounds;
     private int roundTimer;
 
-    public GameManager(ArrayList<String> typeNames, int maxNumberOnDeck)
+    public GameManager(String[] typeNames, int maxNumberOnDeck)
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
     }
-    public GameManager(ArrayList<String> typeNames,int maxNumberOnDeck,int amountOfRounds)
+    public GameManager(String[] typeNames,int maxNumberOnDeck,int amountOfRounds)
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
         this.amountOfRounds = amountOfRounds;
     }
-    public GameManager(ArrayList<String>  typeNames, int maxNumberOnDeck, int amountOfRounds, int roundTimer)
+    public GameManager(String[]  typeNames, int maxNumberOnDeck, int amountOfRounds, int roundTimer)
     {
         this.cardTypes = new ArrayList<>();
         initializeCardTypes(typeNames);
@@ -75,7 +75,7 @@ public class GameManager
     {
         return opponent;
     }
-    private void initializeCardTypes(ArrayList<String> typeNames)
+    private void initializeCardTypes(String[] typeNames)
     {
         for (String typeName : typeNames)
         {

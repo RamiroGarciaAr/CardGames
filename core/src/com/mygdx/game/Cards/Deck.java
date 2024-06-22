@@ -12,10 +12,10 @@ public class Deck {
     private BorderTextureManager borderTextureManager;
     private HashMap<String, Colors> typeColorsMap = new HashMap<>();
 
-    private ArrayList<String> typeNames;
+    private String[] typeNames;
     private final int maxNumberOnDeck;
 
-    public Deck(ArrayList<String> typeNames, int maxNumberOnDeck) {
+    public Deck(String[] typeNames, int maxNumberOnDeck) {
         this.textureManager = new TextureManager(typeNames);
         this.borderTextureManager = new BorderTextureManager();
 
@@ -80,7 +80,7 @@ public class Deck {
         assignColorToType(typeName, color, false);
     }
 
-    private void assignRandomColorsToTypesIfNeeded(ArrayList<String> typeNames) {
+    private void assignRandomColorsToTypesIfNeeded(String[] typeNames) {
         Colors[] colors = Colors.values();
         Random random = new Random();
         for (String typeName : typeNames) {
