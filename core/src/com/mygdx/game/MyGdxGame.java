@@ -40,6 +40,8 @@ public class MyGdxGame extends ApplicationAdapter
 	private int startingMachineScore=0;
 	private int startingPlayerScore=0;
 	private boolean mouseOverHighlightedCard = false;
+	private int numbersOnDeck = -1;
+	private int numbersOfCardsInHand = -1;
 
 
 	@Override
@@ -56,25 +58,23 @@ public class MyGdxGame extends ApplicationAdapter
 		MusicPlayer musicPlayer = new MusicPlayer();
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
-		//ArrayList<String> typeNames = new ArrayList<String>(); //AGREGAR
+		if (numbersOfCardsInHand < 0 || numbersOnDeck < 0)
+			Gdx.app.error("FATAL ERROR","Wrong Asignation");
 		//====================== End Prologue =======================
 		//Test 3
-		int numbersOnDeck = 10; // NumbersOnDeck(10)
+		numbersOnDeck = 10; // NumbersOnDeck(10)
 
 		//TypesOfCards(Water, Fire, Earth)
 		String[] typeNames = {"Water","Fire","Earth"};
-//		typeNames.add("Water");
-//		typeNames.add("Fire");
-//		typeNames.add("Earth");
 
-		int numbersOfCardsInHand = 3; //CardsByPlayer(3)
+		numbersOfCardsInHand = 3; //CardsByPlayer(3)
 
 		StartingScore(100, 400); //StartingScore
 
 		int roundTimer =30; //RoundsTimer(30)
 		int rounds = 30; //Rounds(30)
 
-		gameManager = new GameManager(typeNames, numbersOnDeck,rounds,roundTimer);
+
 
 		Deck deck = new Deck(typeNames, numbersOnDeck);
 
@@ -84,7 +84,7 @@ public class MyGdxGame extends ApplicationAdapter
 
 		deck.generateDeck(); // Hay que generar el deck antes de llamar a las habilidades
 		// Asignar habilidades especiales a una carta específica
-		//Test 0
+		//Rule Varname
 		deck.AddSpecialAbilityTo("Water",3, new ScoreModifierAction(3));
 		//Test 1 - Crea una carta que cuando se activa saca 3 cartas del deck
 		deck.AddSpecialAbilityTo(7,new MoveCardsAction(deck.getDeck(),3));
@@ -96,13 +96,25 @@ public class MyGdxGame extends ApplicationAdapter
 			if (card.getValue() % 2 == 0)
 				deck.AddSpecialAbilityTo("Water",card.getValue(),new LookAtAction(1));
 		}
-
+		/*
+			ElementalClashRule for type Water, Fire, Earth:
+			if(type == Earth){
+				WinnerType(Fire)
+			}elif(type == Water){
+				WinnerType(Earth)
+			}else{
+				tied = true
+			}
+		 */
 		//Test 5 - Asignamos que tipo le gana a que
+
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
 		gameManager.addTypeRelation("Earth", "Water");
 
 		//====================== Epilogue =======================
+		gameManager = new GameManager(typeNames, numbersOnDeck,rounds,roundTimer);
+
 		player = new Player(startingPlayerScore, numbersOfCardsInHand);
 		machine = new AI(startingMachineScore, numbersOfCardsInHand);
 
