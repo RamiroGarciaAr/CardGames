@@ -58,8 +58,6 @@ public class MyGdxGame extends ApplicationAdapter
 		MusicPlayer musicPlayer = new MusicPlayer();
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
-		if (numbersOfCardsInHand < 0 || numbersOnDeck < 0)
-			Gdx.app.error("FATAL ERROR","Wrong Asignation");
 		//====================== End Prologue =======================
 		//Test 3
 		numbersOnDeck = 10; // NumbersOnDeck(10)
@@ -96,24 +94,16 @@ public class MyGdxGame extends ApplicationAdapter
 			if (card.getValue() % 2 == 0)
 				deck.AddSpecialAbilityTo("Water",card.getValue(),new LookAtAction(1));
 		}
-		/*
-			ElementalClashRule for type Water, Fire, Earth:
-			if(type == Earth){
-				WinnerType(Fire)
-			}elif(type == Water){
-				WinnerType(Earth)
-			}else{
-				tied = true
-			}
-		 */
+
 		//Test 5 - Asignamos que tipo le gana a que
 
 		gameManager.addTypeRelation("Water", "Fire");
 		gameManager.addTypeRelation("Fire", "Earth");
 		gameManager.addTypeRelation("Earth", "Water");
 
+
 		//====================== Epilogue =======================
-		gameManager = new GameManager(typeNames, numbersOnDeck,rounds,roundTimer);
+
 
 		player = new Player(startingPlayerScore, numbersOfCardsInHand);
 		machine = new AI(startingMachineScore, numbersOfCardsInHand);
