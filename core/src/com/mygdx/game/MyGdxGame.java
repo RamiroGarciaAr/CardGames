@@ -54,7 +54,7 @@ public class MyGdxGame extends ApplicationAdapter{
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
 
-
+		// YOUR PROGRAM GOES HERE
 
 		deck.generateDeck();
 		gameManager.dealInitialCards(player, numbersOfCardsInHand, deck);
