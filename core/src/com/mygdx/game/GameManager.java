@@ -9,7 +9,7 @@ import com.mygdx.game.Players.Player;
 import com.mygdx.game.Cards.Type;
 import java.util.*;
 
-public abstract class GameManager
+public class GameManager
 {
     private final List<Type> cardTypes;
     private Player opponent;
@@ -27,7 +27,6 @@ public abstract class GameManager
         }
 
     }
-    public abstract boolean winGameRule();
 
     public GameManager(String[] typeNames, int maxNumberOnDeck)
     {

@@ -54,52 +54,9 @@ public class MyGdxGame extends ApplicationAdapter{
 		musicPlayer.loadSongs(new String[]{"pookatori_and_friends.mp3", "ready_set_play.mp3","threshold.mp3"});
 		musicPlayer.play();
 
-		LoadBackgroundImage("background3.png");
-		numbersOnDeck = 7;
-		String[] typeNames = {"Water", "Fire", "Earth"};
-		numbersOfCardsInHand = 3;
-		int rounds = 30;
-		int roundTimer = 30;
-		StartingScore(100, 400);
 
-		Deck deck = new Deck(typeNames, numbersOnDeck);
-		gameManager = new GameManager(typeNames, numbersOnDeck, rounds, roundTimer) {
-			@Override
-			public int compare(Card o1, Card o2) {
-				return 0;
-			}
 
-			@Override
-			public boolean winGameRule() {
-				return false;
-			}
-		};
 		deck.generateDeck();
-
-		gameManager.addTypeRelation("Fire", "Earth");
-		gameManager.addTypeRelation("Earth", "Water");
-		gameManager.addTypeRelation("Water", "Fire");
-
-		player = new Player(startingPlayerScore, numbersOfCardsInHand);
-		machine = new AI(startingMachineScore, numbersOfCardsInHand);
-
-		deck.AddSpecialAbilityTo(7, new MoveCardsAction(deck.getDeck(), player.getCardsInHand(), 2));
-		deck.AddSpecialAbilityTo("Fire", 3, new CustomCardAction() {
-			@Override
-			public void execute(Player user) {
-				Gdx.app.log("Score Modifier Action","Change Score");
-				user.setScore(user.getScore() - 3 );
-			}
-		});
-		deck.AddSpecialAbilityTo("Water",3,new LookAtAction(3));
-		deck.AddSpecialAbilityTo("Water",2,new LookAtAction(deck.getDeck(),1));
-
-		deck.assignColorToType("Water", Colors.CORNFLOWER, true);
-		deck.assignColorToType("Fire", Colors.MAGENTA, true);
-		deck.assignColorToType("Earth", Colors.LIME, true);
-
-
-
 		gameManager.dealInitialCards(player, numbersOfCardsInHand, deck);
 		gameManager.dealInitialCards(machine, numbersOfCardsInHand, deck);
 
