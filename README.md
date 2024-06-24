@@ -11,9 +11,6 @@ Este proyecto es un juego desarrollado con [libGDX](https://libgdx.com/), un fra
 2. [Requisitos](#requisitos)
 3. [Instalación](#instalación)
 4. [Uso](#uso)
-5. [Características](#características)
-6. [Contribuciones](#contribuciones)
-7. [Licencia](#licencia)
 
 ## Introducción
 
