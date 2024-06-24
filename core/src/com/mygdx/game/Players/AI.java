@@ -17,4 +17,9 @@ public class AI extends Player
         int index = random.nextInt(getCardsInHand().size());
         return playCard(index);
     }
+    @Override
+    public String toString()
+    {
+        return "Machine";
+    }
 }

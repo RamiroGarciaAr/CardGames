@@ -9,12 +9,25 @@ import com.mygdx.game.Players.Player;
 import com.mygdx.game.Cards.Type;
 import java.util.*;
 
-public class GameManager
+public abstract class GameManager
 {
     private final List<Type> cardTypes;
     private Player opponent;
     private int amountOfRounds;
     private int roundTimer;
+
+    public int compare(Card o1, Card o2)
+    {
+        if (o1.getType().canBeat(o2.getType())) {
+            return 1;
+        } else if (o2.getType().canBeat(o1.getType())) {
+            return -1;
+        } else {
+            return o1.compareTo(o2);
+        }
+
+    }
+    public abstract boolean winGameRule();
 
     public GameManager(String[] typeNames, int maxNumberOnDeck)
     {
@@ -35,7 +48,10 @@ public class GameManager
         this.roundTimer = roundTimer;
     }
 
-
+    public void WinGame(Player player)
+    {
+        System.out.println(player.toString()+ "Wins the game");
+    }
 
     public void playRound(Card playerCard, Player player, AI machine)
     {
@@ -56,7 +72,7 @@ public class GameManager
                     machineCard.getSpecialAction().execute(machine);
 
                 //Comparacion de cartas
-                int comparisonResult = CardComparator.compare(playerCard, machineCard);
+                int comparisonResult = compare(playerCard, machineCard);
                 if (comparisonResult > 0) {
                     player.setScore(player.getScore() + 1);
                     System.out.println("Player wins with " + playerCard + " against " + machineCard);
@@ -103,22 +119,6 @@ public class GameManager
         for(int i=0; i<numCards;i++ )
         {
             player.addCardToHand(deck.drawCard());
-        }
-    }
-    private void animateCardToCenterOfScreen(Card card)
-    {
-
-    }
-
-}
-class CardComparator {
-    public static int compare(Card o1, Card o2) {
-        if (o1.getType().canBeat(o2.getType())) {
-            return 1;
-        } else if (o2.getType().canBeat(o1.getType())) {
-            return -1;
-        } else {
-            return o1.compareTo(o2);
         }
     }
 }

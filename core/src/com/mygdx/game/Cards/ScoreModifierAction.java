@@ -13,7 +13,7 @@ public class ScoreModifierAction implements CardAction
     @Override
     public void execute(Player user)
     {
-        Gdx.app.log("Score Modifier Action","Change Score //TODO");
-        user.setScore(user.getScore() - amount);
+        Gdx.app.log("Score Modifier Action","Change Score");
+        user.setScore(user.getScore() + amount);
     }
 }

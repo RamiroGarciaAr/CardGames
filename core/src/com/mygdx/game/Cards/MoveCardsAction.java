@@ -10,9 +10,18 @@ import java.util.List;
 public class MoveCardsAction implements CardAction {
 
     private ArrayList<Card> to;
+    private ArrayList<Card> from;
     private final int amount;
 
+    //
     public MoveCardsAction(ArrayList<Card> to, int amount) {
+        this.to = to;
+        this.amount = amount;
+    }
+    //D
+    public MoveCardsAction(ArrayList<Card> from, ArrayList<Card> to, int amount)
+    {
+        this.from = from;
         this.to = to;
         this.amount = amount;
     }
