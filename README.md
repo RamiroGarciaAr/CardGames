@@ -14,7 +14,7 @@ Este proyecto es un juego desarrollado con [libGDX](https://libgdx.com/), un fra
 
 ## Introducción
 
-Este proyecto es un sencillo juego desarrollado como ejemplo para aprender a usar libGDX. El objetivo del juego es [describir el objetivo del juego].
+Este proyecto es un sencillo juego desarrollado como ejemplo para aprender a usar libGDX.
 
 ## Requisitos
 
